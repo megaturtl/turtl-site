@@ -1,5 +1,11 @@
 module.exports = [
     {
+        date: "2026-07-25",
+        emoji: "😊",
+        emojiLabel: "habby",
+        text: "my awesome friend Fire made awesome fanart of my guy :3 I put it on my about me page! I love my friends!"
+    },
+    {
         date: "2026-07-14",
         emoji: "👋",
         emojiLabel: "sayonara",

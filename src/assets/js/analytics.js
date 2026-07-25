@@ -1,5 +1,5 @@
 // Immediately target this count so the number appears to load instantly
-const FALLBACK_VISITOR_COUNT = 1010;
+const FALLBACK_VISITOR_COUNT = 1027;
 
 // Pad to at least this many digits
 const MIN_DIGITS = 5;
