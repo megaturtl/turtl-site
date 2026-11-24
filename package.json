@@ -1,7 +1,7 @@
 {
-  "name": "11ty-minimal",
+  "name": "turtl-site",
   "version": "1.0.0",
-  "description": "A minimal 11ty project with component-based structure",
+  "description": "Static Eleventy site for turtl.cc",
   "main": ".eleventy.js",
   "scripts": {
     "start": "cross-env ELEVENTY_ENV=development eleventy --serve",

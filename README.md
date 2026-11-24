@@ -55,6 +55,31 @@ The following is for when I inevitably leave my site for months, come back, and 
    npm run build
    ```
 
+## Hosting on NixOS
+
+Add the site as an input in the host flake:
+
+```nix
+inputs.turtl-site = {
+  url = "github:megaturtl/turtl-site";
+  inputs.nixpkgs.follows = "nixpkgs";
+};
+```
+
+Add `inputs.turtl-site.nixosModules.default` to the host's module list and configure:
+
+```nix
+{
+  services.turtl-site = {
+    enable = true;
+    hostName = "turtl.cc";
+  };
+}
+```
+
+This serves the site with Nginx. Configure listeners and TLS on
+`services.nginx.virtualHosts."turtl.cc"` and manage DNS and firewall rules on the host.
+
 ## Adding New Pages
 
 Create new `.njk` or `.md` files in the `src/pages` directory. They will automatically use the base layout if you include the front matter:
