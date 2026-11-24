@@ -20,7 +20,7 @@ module.exports = function (eleventyConfig) {
 
     /**
      *  CSS EXTENSION
-     *  Setting up CSS files to be recognised as aN eleventy template language. This allows our minifier to read CSS files and minify them
+     *  Treat CSS files as templates so Eleventy emits them to the output directory.
      */
     eleventyConfig.addTemplateFormats("css");
     eleventyConfig.addExtension("css", configCss);

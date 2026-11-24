@@ -40,20 +40,13 @@ The following is for when I inevitably leave my site for months, come back, and 
 
 ## Getting Started
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+Run these commands from the repository root:
 
-2. Start development server:
-   ```bash
-   npm run dev
-   ```
-
-3. Build for production:
-   ```bash
-   npm run build
-   ```
+| Command | What it does |
+| --- | --- |
+| `nix run` | Installs the site dependencies and starts the Eleventy development server. |
+| `nix build` | Builds the production site to `result/` on Linux. |
+| `nix develop` | Opens a shell with Node and npm for manual tooling. Not required for the other commands. |
 
 ## Hosting on NixOS
 
@@ -93,7 +86,4 @@ title: Example Page Title
 
 ## Build Features
 
-Automatic minification for:
-- HTML
-- CSS
-- JavaScript
+Production builds bundle and minify JavaScript with esbuild.
