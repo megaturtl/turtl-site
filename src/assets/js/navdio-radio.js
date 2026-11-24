@@ -9,12 +9,13 @@
     const date = document.getElementById('date');
     const trackTooltip = document.getElementById('track-tooltip');
     const cover = document.getElementById('album-cover');
+    const controls = document.getElementById('radio-controls');
     const toggle = document.getElementById('radio-toggle');
     const message = document.getElementById('radio-message');
     const audio = document.getElementById('radio-audio');
     const supported = Boolean(audio.canPlayType('audio/ogg; codecs="opus"'));
     let sourceState = 'idle';
-    let trackKey = '';
+    let coverVersion = null;
     let infoKey = '';
     let listening = false;
     let playbackAttempt = 0;
@@ -24,6 +25,7 @@
     let coverUrl;
 
     function updateToggle() {
+        controls.hidden = sourceState === 'idle';
         toggle.disabled = !supported || (!listening && sourceState !== 'playing');
         toggle.textContent = listening ? '(stop)' : '(tune in)';
         toggle.setAttribute('aria-label', listening ? 'Stop radio' : 'Tune in to the radio');
@@ -83,19 +85,19 @@
         if (listening && audio.paused) stopListening();
     });
 
-    async function updateCover(key) {
+    async function updateCover(version) {
         coverRequest?.abort();
         coverRequest = null;
         cover.hidden = true;
         cover.removeAttribute('src');
         if (coverUrl) URL.revokeObjectURL(coverUrl);
         coverUrl = null;
-        if (!key) return;
+        if (!version) return;
 
         const controller = new AbortController();
         coverRequest = controller;
         try {
-            const response = await fetch(`${RADIO_URL}/cover`, {
+            const response = await fetch(`${RADIO_URL}/cover?v=${encodeURIComponent(version)}`, {
                 cache: 'no-store',
                 signal: controller.signal
             });
@@ -112,15 +114,23 @@
     }
 
     cover.addEventListener('load', () => {
-        cover.hidden = !trackKey;
+        cover.hidden = !coverUrl;
     });
     cover.addEventListener('error', () => {
         cover.hidden = true;
     });
 
+    function formatLastPlayed(timestamp) {
+        const minutes = Math.floor((Date.now() / 1000 - timestamp) / 60);
+        if (minutes < 1) return 'just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (minutes < 1440) return `${Math.floor(minutes / 60)}h ago`;
+        return `${Math.floor(minutes / 1440)}d ago`;
+    }
+
     function renderInfo(data) {
         sourceState = data.state;
-        const hasTrack = (sourceState === 'playing' || sourceState === 'paused') && Boolean(data.title);
+        const hasTrack = Boolean(data.title);
         const nextTrackKey = hasTrack ? JSON.stringify([data.title, data.artists, data.album]) : '';
         const nextInfoKey = JSON.stringify([sourceState, nextTrackKey]);
         if (nextInfoKey !== infoKey) {
@@ -131,15 +141,25 @@
             artist.hidden = !mainArtist;
             separator.hidden = !mainArtist;
             track.textContent = hasTrack ? data.title : 'nothing right now';
-            date.textContent = hasTrack ? (sourceState === 'paused' ? ' (paused)' : ' (live)') : '';
             trackTooltip.firstElementChild.textContent = hasTrack ? [artists.join(', '), data.title, data.album].filter(Boolean).join(' - ') : '';
             trackTooltip.hidden = !hasTrack;
+            cover.alt = data.album ? `Cover of ${data.album}` : 'Track artwork';
         }
 
-        if (nextTrackKey !== trackKey) {
-            trackKey = nextTrackKey;
-            cover.alt = data.album ? `Cover of ${data.album}` : 'Current track artwork';
-            updateCover(trackKey);
+        let status = '';
+        if (hasTrack) {
+            if (sourceState === 'playing') status = '(live)';
+            if (sourceState === 'paused') status = '(paused)';
+            if (sourceState === 'idle' && Number.isFinite(data.lastPlayedAt)) {
+                status = `(${formatLastPlayed(data.lastPlayedAt)})`;
+            }
+        }
+        if (date.textContent !== status) date.textContent = status;
+
+        const nextCoverVersion = hasTrack ? data.coverVersion : null;
+        if (nextCoverVersion !== coverVersion) {
+            coverVersion = nextCoverVersion;
+            updateCover(coverVersion);
         }
 
         if (window.turtlControls) {
@@ -148,7 +168,8 @@
                 window.turtlControls.setTurtlState(state);
             }
         }
-        updateToggle();
+        if (sourceState === 'idle' && listening) stopListening();
+        else updateToggle();
         widget.classList.add('fade-in');
     }
 

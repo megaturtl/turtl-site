@@ -202,6 +202,7 @@
 
 #now-playing #date {
     color: var(--color-neutral-3);
+    white-space: nowrap;
 }
 
 #now-playing #album-cover:not([hidden]) {
@@ -235,7 +236,7 @@
 }
 
 #radio-track:focus-within #track-tooltip,
-.radio-controls:focus-within #radio-help {
+#radio-controls:focus-within #radio-help {
     visibility: visible;
     opacity: 1;
     transition: none;
