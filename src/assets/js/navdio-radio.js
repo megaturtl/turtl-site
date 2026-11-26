@@ -162,12 +162,7 @@
             updateCover(coverVersion);
         }
 
-        if (window.turtlControls) {
-            const state = sourceState === 'playing' ? 'BOP' : 'IDLE';
-            if (window.turtlControls.getCurrentState() !== state) {
-                window.turtlControls.setTurtlState(state);
-            }
-        }
+        window.turtlControls?.setTurtlState(sourceState === 'playing' ? 'BOP' : 'IDLE', data.bpm);
         if (sourceState === 'idle' && listening) stopListening();
         else updateToggle();
         widget.classList.add('fade-in');

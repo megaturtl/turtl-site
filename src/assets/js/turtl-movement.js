@@ -4,11 +4,10 @@ const turtlControls = (() => {
         STATES: {
             IDLE: '/assets/images/turtl-sleep.gif',
             JUMP: '/assets/images/turtl-jump.gif',
-            BOP: '/assets/images/turtl-bop.gif'
+            BOP: '/assets/images/turtl-bop.png'
         },
         ANIMATION_DURATIONS: {
-            JUMP: (48 / 12) * 1000, // Duration of jump animation before reverting (frames/fps)
-            BOP: 0                // Bop continues until something else happens
+            JUMP: (48 / 12) * 1000 // Duration of jump animation before reverting (frames/fps)
         },
         SOUNDS: {
             POKE: '/assets/sounds/hit.ogg'
@@ -18,6 +17,8 @@ const turtlControls = (() => {
     let idleTimeout,
         currentState = 'IDLE',
         prevState = 'IDLE',
+        bopBpm = 60,
+        bopAnimation = null,
         blockUntil = 0,
         activeTurtl = null,
         pokeSound = null,
@@ -25,10 +26,11 @@ const turtlControls = (() => {
 
     const preloadState = (state) => {
         const img = document.createElement('img');
-        img.className = 'turtl';
+        img.className = state === 'BOP' ? 'turtl turtl-bop' : 'turtl';
+        img.alt = 'turtl';
         img.id = state.toLowerCase(); // ID matches the state name
         img.style.display = 'none';
-        img.src = `${config.STATES[state]}?t=${Date.now()}`;
+        img.src = config.STATES[state] + (state === 'BOP' ? '' : `?t=${Date.now()}`);
         
         // Copy styles from active element if it exists
         if (activeTurtl) {
@@ -47,17 +49,23 @@ const turtlControls = (() => {
         }
     };
 
-    const setTurtlState = (state, remember = true) => {
+    const setTurtlState = (state, bpm) => {
         if (!activeTurtl) return;
+        if (state !== 'JUMP') prevState = state;
+        if (state === 'BOP') {
+            const nextBpm = Number.isFinite(bpm) && bpm > 0 ? bpm : 60;
+            if (nextBpm !== bopBpm) {
+                bopBpm = nextBpm;
+                bopAnimation?.updatePlaybackRate(bopBpm / 60);
+            }
+        }
+
         const now = Date.now();
 
         // Prevent state changes during active animations
         if (now < blockUntil) return;
         if (state !== 'JUMP' && state === currentState) return;
 
-        if (remember && state !== 'JUMP') {
-            prevState = state;
-        }
         currentState = state;
 
         // Ensure we have a preloaded version of the target state
@@ -80,6 +88,12 @@ const turtlControls = (() => {
         
         // Update active reference
         activeTurtl = nextTurtl;
+        bopAnimation?.cancel();
+        bopAnimation = state === 'BOP' ? activeTurtl.animate(
+            [{ objectPosition: 'left' }, { objectPosition: 'right' }],
+            { duration: 2000, iterations: Infinity, easing: 'steps(2, jump-none)' }
+        ) : null;
+        if (bopAnimation) bopAnimation.playbackRate = bopBpm / 60;
         
         // Remove this state from preloaded (since it's now active)
         delete preloadedStates[state];
@@ -99,12 +113,10 @@ const turtlControls = (() => {
             blockUntil = now + config.ANIMATION_DURATIONS.JUMP;
             idleTimeout = setTimeout(() => {
                 blockUntil = 0;
-                setTurtlState(prevState);
+                setTurtlState(prevState, bopBpm);
             }, config.ANIMATION_DURATIONS.JUMP);
         }
     };
-
-    const getCurrentState = () => currentState;
 
     const handlePoke = () => {
         if (!activeTurtl) return;
@@ -115,7 +127,7 @@ const turtlControls = (() => {
             
             // Use requestAnimationFrame to sync the visual and audio
             requestAnimationFrame(() => {
-                setTurtlState('JUMP', false);
+                setTurtlState('JUMP');
                 pokeSound.play().catch(e => console.warn('Failed to play poke sound:', e));
             });
         }
@@ -134,7 +146,6 @@ const turtlControls = (() => {
         pokeSound = new Audio(config.SOUNDS.POKE);
         pokeSound.preservesPitch = false;
         
-        setTurtlState('IDLE');
         activeTurtl.addEventListener(config.POKE_TRIGGER, handlePoke);
     };
 
@@ -146,10 +157,7 @@ const turtlControls = (() => {
     }
 
     // Public API
-    return {
-        setTurtlState,
-        getCurrentState
-    };
+    return { setTurtlState };
 })();
 
 window.turtlControls = turtlControls;

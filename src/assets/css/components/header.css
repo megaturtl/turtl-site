@@ -263,6 +263,12 @@
     transform: scale(0.95);
 }
 
+.turtl-bop {
+    aspect-ratio: 19 / 22;
+    object-fit: cover;
+    object-position: left;
+}
+
 #theme-toggle {
     background: none;
     border: none;
