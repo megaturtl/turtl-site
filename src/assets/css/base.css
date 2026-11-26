@@ -41,6 +41,7 @@ body {
   display: flex;
   gap: var(--space-lg);
   flex: 1; /* This makes site-body take up remaining space */
+  flex-direction: row-reverse; /* Put sidebar on left even though it's defined after main content */
   min-height: 0; /* Required for flex child to prevent overflow */
 }
 
@@ -52,6 +53,21 @@ main {
   background-color: var(--color-neutral-main);
   padding: var(--container-padding);
   flex: 1; /* Allow content to grow */
+}
+
+/* Render sidebar content below main content on smaller screens */
+@media (width < 800px) {
+  .site-body {
+    flex-direction: column;
+  }
+
+  .site-body > main {
+    flex: none;
+  }
+
+  .site-body > .sidebar {
+    width: auto;
+  }
 }
 
 .page-unique-content {

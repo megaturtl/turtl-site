@@ -30,7 +30,6 @@
             {% include "components/header.njk" %}
 
             <div class="site-body">
-                {% include "components/sidebar.njk" %}
 
                 <main>
                     <h2 class="page-title">{{ title }}</h2>
@@ -38,6 +37,8 @@
                         {{ content | safe }}
                     </div>
                 </main>
+
+                {% include "components/sidebar.njk" %}
             </div>
 
             {% include "components/footer.njk" %}
