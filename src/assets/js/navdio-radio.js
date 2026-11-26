@@ -148,7 +148,6 @@
 
         let status = '';
         if (hasTrack) {
-            if (sourceState === 'playing') status = '(live)';
             if (sourceState === 'paused') status = '(paused)';
             if (sourceState === 'idle' && Number.isFinite(data.lastPlayedAt)) {
                 status = `(${formatLastPlayed(data.lastPlayedAt)})`;
