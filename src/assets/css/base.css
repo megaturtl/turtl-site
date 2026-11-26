@@ -55,8 +55,12 @@ main {
   flex: 1; /* Allow content to grow */
 }
 
-/* Render sidebar content below main content on smaller screens */
 @media (width < 800px) {
+  .site-container {
+    padding-inline: var(--space-md);
+  }
+
+  /* Render sidebar content below main content. */
   .site-body {
     flex-direction: column;
   }

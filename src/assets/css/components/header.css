@@ -22,6 +22,12 @@
     gap: var(--space-sm) var(--space-lg);
 }
 
+@media (width < 800px) {
+    .header-top {
+        padding-inline: var(--space-sm);
+    }
+}
+
 .header-middle {
     background-color: var(--color-main);
     position: relative;
@@ -86,6 +92,13 @@
 .social-links img {
     display: block;
     width: var(--text-size-medium);
+}
+
+@media (width < 430px) {
+    .social-links {
+        flex-basis: 100%;
+        justify-content: space-between;
+    }
 }
 
 .nav-links {
