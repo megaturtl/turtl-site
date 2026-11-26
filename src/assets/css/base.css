@@ -128,6 +128,8 @@ ul {
 
 .page-title {
   margin-bottom: var(--space-md);
+  font-size: clamp(var(--heading-size-h3), 17vw, var(--heading-size-h2));
+  overflow-wrap: anywhere;
 }
 
 .icon {

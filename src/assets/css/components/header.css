@@ -197,6 +197,7 @@
 }
 
 #now-playing {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -209,6 +210,15 @@
     font-size: var(--text-size-regular);
     color: var(--color-text-inverted);
 
+}
+
+#now-playing .tooltipped {
+    position: static;
+}
+
+#now-playing .tooltip,
+#theme-toggle .tooltip {
+    inset-inline-end: 0;
 }
 
 #now-playing.fade-in {
