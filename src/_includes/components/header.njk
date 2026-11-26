@@ -16,16 +16,17 @@
             </a>
         </div>
         <div id="now-playing">
-            <p>what i'm listening to:</p>
             <img id="album-cover" alt="" hidden>
-            <div id="artist" hidden></div>
-            <div id="separator" hidden> - </div>
             <div id="radio-track" class="tooltipped" tabindex="0">
-                <span id="track"></span>
-                <div id="track-tooltip" class="tooltip" role="tooltip" hidden>
-                    <p></p>
-                </div>
-            </div>
+    <div id="track-name-wrapper">
+        <div id="track-name-strip">
+            <span id="artist" hidden></span><span id="separator" hidden> - </span><span id="track"></span>
+        </div>
+    </div>
+    <div id="track-tooltip" class="tooltip" role="tooltip" hidden>
+        <p></p>
+    </div>
+</div>
             <div id="date"></div>
             <div id="radio-controls" class="tooltipped" hidden>
                 <button id="radio-toggle" type="button" disabled>(tune in)</button>

@@ -212,6 +212,37 @@
     });
 
     setMessage('');
+
+    const trackWrapper = document.getElementById('track-name-wrapper');
+    const trackStrip = document.getElementById('track-name-strip');
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    let trackAnimation;
+
+    function updateTrackScroll() {
+        trackAnimation?.cancel();
+
+        const distance = trackStrip.scrollWidth - trackWrapper.clientWidth;
+        if (distance <= 0 || reducedMotion.matches) return;
+
+        const travel = distance / 30 * 1000; // 30 px per second
+        const pause = 800;
+        const duration = 2 * (travel + pause);
+        const end = `translateX(${-distance}px)`;
+
+        trackAnimation = trackStrip.animate([
+            { transform: 'translateX(0)' },
+            { transform: 'translateX(0)', offset: pause / duration },
+            { transform: end, offset: (pause + travel) / duration },
+            { transform: end, offset: (2 * pause + travel) / duration },
+            { transform: 'translateX(0)' },
+        ], { duration, iterations: Infinity });
+    }
+
+    const trackResize = new ResizeObserver(updateTrackScroll);
+    trackResize.observe(trackWrapper);
+    trackResize.observe(trackStrip);
+    reducedMotion.addEventListener('change', updateTrackScroll);
+
     updateToggle();
     if (!document.hidden) pollInfo();
 })();
