@@ -26,6 +26,10 @@
     .header-top {
         padding-inline: var(--space-sm);
     }
+
+    .header-bottom {
+        padding-inline: var(--space-md);
+    }
 }
 
 .header-middle {
@@ -34,6 +38,7 @@
 }
 
 .header-bottom {
+    gap: var(--space-sm);
     background-color: var(--color-neutral-dark);
     transition: background-color 0.3s ease;
     position: relative;
@@ -101,20 +106,26 @@
     }
 }
 
+.main-nav {
+    flex: 1;
+    min-width: 0;
+}
+
 .nav-links {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-sm) clamp(var(--space-sm), 2.5vw, var(--space-md));
     list-style: none;
     font-family: var(--font-headings);
     font-weight: var(--weight-bold);
-    font-size: var(--text-size-huge);
+    font-size: clamp(1.25rem, 7vw, var(--text-size-huge));
     padding: 0;
 }
 
 .nav-links li {
     line-height: var(--line-height-tight);
     transition: opacity 0.3s ease, letter-spacing 0.3s ease, text-shadow 0.2s ease;
-    flex: 1;
     text-align: center;
     opacity: 1;
     text-shadow: 0.5rem 1rem transparent;
@@ -123,11 +134,6 @@
 .nav-links li a {
     transition: color 0.3s ease;
     display: block;
-    padding-right: var(--space-md);
-}
-
-.nav-links li:first-child a {
-    padding-left: 0;
 }
 
 /* Color cycling for navigation links */
@@ -160,45 +166,34 @@
 }
 
 .nav-links li:hover {
-    opacity: 1 !important;
+    opacity: 1;
     letter-spacing: .2rem;
     text-shadow: 0.3rem 0.3rem var(--color-neutral-dark);
 }
 
 .nav-links li:hover a {
-    color: var(--color-neutral-white) !important;
+    color: var(--color-neutral-white);
     opacity: 1;
 }
 
-/* Makes background color change on hover */
-.nav-links li:nth-child(1):hover ~ .header-bottom,
 .header-bottom:has(.nav-links li:nth-child(1):hover) {
     background-color: var(--color-2);
 }
 
-.nav-links li:nth-child(2):hover ~ .header-bottom,
 .header-bottom:has(.nav-links li:nth-child(2):hover) {
     background-color: var(--color-3);
 }
 
-.nav-links li:nth-child(3):hover ~ .header-bottom,
 .header-bottom:has(.nav-links li:nth-child(3):hover) {
     background-color: var(--color-4);
 }
 
-.nav-links li:nth-child(4):hover ~ .header-bottom,
 .header-bottom:has(.nav-links li:nth-child(4):hover) {
     background-color: var(--color-5);
 }
 
-.nav-links li:nth-child(5):hover ~ .header-bottom,
 .header-bottom:has(.nav-links li:nth-child(5):hover) {
     background-color: var(--color-6);
-}
-
-.nav-links li:nth-child(6):hover ~ .header-bottom,
-.header-bottom:has(.nav-links li:nth-child(6):hover) {
-    background-color: var(--color-neutral-dark);
 }
 
 #now-playing {
@@ -312,6 +307,8 @@
     background: none;
     border: none;
     cursor: pointer;
+    flex: none;
+    min-width: 2.75rem;
     height: 3rem;
     z-index: 1;
 }
