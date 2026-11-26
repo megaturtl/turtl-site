@@ -352,3 +352,44 @@
     line-height: 1;
     border-radius: var(--border-radius-sm);
 }
+
+@media (width < 540px) {
+    .header-middle {
+        padding-top: clamp(var(--space-md), var(--space-md) + (540px - 100vw) * 0.75, 2.25rem);
+        padding-inline: var(--space-md);
+    }
+
+    #visitor-counter {
+        align-items: center;
+        font-size: 0.875rem;
+    }
+
+    #visitor-counter > p {
+        white-space: nowrap;
+    }
+
+    #visitor-number span {
+        display: grid;
+        place-items: center;
+        width: 1.25rem;
+        aspect-ratio: 1;
+        padding: 0.125rem 0 0;
+    }
+
+    .site-title {
+        font-size: clamp(2rem, 30vw - 3.2rem, var(--heading-size-h1));
+    }
+
+    #cc-shell div {
+        width: 0.56em;
+        height: 0.56em;
+    }
+
+    #turtl-container {
+        right: var(--space-md);
+    }
+
+    .header-middle .turtl {
+        width: 5.125rem;
+    }
+}
